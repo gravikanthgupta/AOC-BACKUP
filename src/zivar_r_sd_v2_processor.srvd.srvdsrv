@@ -1,0 +1,12 @@
+@EndUserText.label: 'Processor App fOr service'
+define service Zivar_r_sd_v2_processor {
+  expose zivar_r_travel_processor    as TRAVEL;
+  expose zivar_r_booking_processor   as Booking;
+  expose ZIVAR_R_BOOkSUPPL_PROCESSOR as BookSupplement;
+  expose /DMO/I_Agency               as Agency;
+  expose /DMO/I_Customer             as Customer;
+  expose /DMO/I_Carrier              as Carrier;
+  expose /DMO/I_Connection           as Connection;
+  expose /DMO/I_Overall_Status_VH    as OverallSatus;
+  expose /DMO/I_Booking_Status_VH    as BookingStatus;
+}

@@ -30,7 +30,7 @@ association[1] to zi_ivar_r_bpa as _BUSINESSPARTNER on
     @Semantics.quantity.unitOfMeasure: 'UnitOfMeasure'
     zi_ivar_r_sales._item.qty as Quantity,
     zi_ivar_r_sales._item.uom as UnitOfMeasure,
-    
+
     _PRODUCT,
     _BUSINESSPARTNER
     

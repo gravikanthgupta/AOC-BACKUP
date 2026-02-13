@@ -16,7 +16,7 @@ CLASS zivar_cl_ivar_r_amdp DEFINITION
       IMPORTING VALUE(orderid) TYPE zivar_r_dte_id
       EXPORTING VALUE(gross)   TYPE zivar_r_so_item-gross_amount.
 
-   class-methods: get_cus_rank for tabLE FUNCTION zivar_r_tf.
+    CLASS-METHODS: get_cus_rank FOR TABLE FUNCTION zivar_r_tf.
 
   PROTECTED SECTION .
   PRIVATE SECTION.
@@ -41,7 +41,7 @@ CLASS zivar_cl_ivar_r_amdp IMPLEMENTATION.
       EXPORTING
         orderid = 'FEE7E67524AE1FD0BC8D566338B6318E'
       IMPORTING
-        gross   = data(lv_gross)
+        gross   = DATA(lv_gross)
     ).
     out->write( |Gross amount: { lv_gross } 'INR'| ).
 
@@ -74,15 +74,15 @@ CLASS zivar_cl_ivar_r_amdp IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD get_cus_rank by dATABASE funCTION FOR HDB LANGUAGE SQLSCRIPT oPTIONS reAD-ONLY
-                      uSING zivar_r_bpa zivar_r_so_hdr zivar_r_so_item.
+  METHOD get_cus_rank BY DATABASE FUNCTION FOR HDB LANGUAGE SQLSCRIPT OPTIONS READ-ONLY
+                      USING zivar_r_bpa zivar_r_so_hdr zivar_r_so_item.
 
-    return select
+    RETURN select
       bpa.client,
       bpa.company_name,
       sum(item.gross_amount) as total_sales,
       item.currency_code as currency_code,
-      RANK ( ) OVER ( order by sum ( item.gross_amount ) desc ) as customer_rank
+      rank ( ) over ( order by sum ( item.gross_amount ) desc ) as customer_rank
       fROM zivar_r_bpa as bpa
       inner join zivar_r_so_hdr as hdr
       on bpa.bp_id = hdr.buyer
@@ -93,6 +93,6 @@ CLASS zivar_cl_ivar_r_amdp IMPLEMENTATION.
       item.currency_code;
 *      liMIT 3;
 
-  ENDMETHOD.
+  endmethod.
 
 ENDCLASS.

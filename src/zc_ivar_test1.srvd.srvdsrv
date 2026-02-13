@@ -1,0 +1,4 @@
+@EndUserText.label: 'TEst'
+define service Zc_ivar_test1 {
+  expose zc_ivar_test as Sales;
+}

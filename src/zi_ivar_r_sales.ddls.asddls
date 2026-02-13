@@ -13,7 +13,7 @@ define view entity zi_ivar_r_sales
       _hdr.buyer                as Buyer,
       //@Semantics.amount.currencyCode: 'CurrencyCode'
       //_hdr.gross_amount as GrossAmount,
-
+// Aggregations
       @Semantics.amount.currencyCode: 'CurrencyCode'
       sum( _item.gross_amount ) as TotalGross,
 

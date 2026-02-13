@@ -38,6 +38,20 @@ define root view entity zivar_r_travel
       //This field we can use as Etag field --> OData etag
       last_changed_at as LastChangedAt,
 
+      case overall_status
+        when 'O' then 'Open'
+        when 'A' then 'Approved'
+        when 'R' then 'Rejected'
+        when 'X' then 'Cancelled'
+        end           as StatusText,
+
+      case overall_status
+        when 'O' then 2
+        when 'A' then 3
+        when 'R' then 1
+        when 'X' then 1
+        end           as Criticality,
+
       _agency,
       _customer,
       _Currency,

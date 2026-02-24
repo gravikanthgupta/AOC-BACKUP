@@ -14,7 +14,8 @@ CLASS zivar_cl_inhe DEFINITION
 ENDCLASS.
 
 
-CLASS zivar_cl_inhe IMPLEMENTATION.
+
+CLASS ZIVAR_CL_INHE IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.

@@ -12,7 +12,7 @@ ENDCLASS.
 
 
 
-CLASS zivar_cl_factory IMPLEMENTATION.
+CLASS ZIVAR_CL_FACTORY IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.

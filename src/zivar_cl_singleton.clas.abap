@@ -12,7 +12,7 @@ ENDCLASS.
 
 
 
-CLASS zivar_cl_singleton IMPLEMENTATION.
+CLASS ZIVAR_CL_SINGLETON IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.

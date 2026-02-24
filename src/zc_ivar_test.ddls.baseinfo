@@ -3,6 +3,7 @@
 {
 "FROM":
 [
+"ZI_IVAR_R_PRODUCT",
 "ZI_IVAR_R_SALES_DATA"
 ],
 "ASSOCIATED":

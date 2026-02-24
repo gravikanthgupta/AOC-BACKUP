@@ -5,6 +5,8 @@
 define root view entity zivar_r_travel_processor
   as projection on zivar_r_travel
 {
+// Concatenate text and ID and display
+
       @ObjectModel.text.element: [ 'Description' ]
 
   key TravelId,

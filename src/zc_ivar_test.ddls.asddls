@@ -21,6 +21,7 @@ define view entity zc_ivar_test as select from zi_ivar_r_sales_Data
     @Semantics.quantity.unitOfMeasure: 'UnitOfMeasure'
     Quantity,
     UnitOfMeasure,
+    _PRODUCT.Name,
     /* Associations */
     _BUSINESSPARTNER,
     _PRODUCT

@@ -12,7 +12,7 @@ ENDCLASS.
 
 
 
-CLASS zivar_cl_cds IMPLEMENTATION.
+CLASS ZIVAR_CL_CDS IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.

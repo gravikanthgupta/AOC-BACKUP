@@ -90,6 +90,7 @@ annotate entity zivar_r_travel_processor with
 
   @UI.selectionField: [{ position: 10 }]
   @UI.lineItem: [{ position: 10 }]
+  
   @UI.identification: [ { position: 10 } ]
   TravelId;
 

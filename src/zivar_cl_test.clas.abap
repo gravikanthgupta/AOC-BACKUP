@@ -11,7 +11,9 @@ PRIVATE SECTION.
 ENDCLASS.
 
 
-CLASS zivar_cl_test IMPLEMENTATION.
+
+CLASS ZIVAR_CL_TEST IMPLEMENTATION.
+
 
 METHOD if_oo_adt_classrun~main.
 data connection type ref to lcl_connection.
@@ -40,9 +42,4 @@ connection = lcl_connection=>get_connection( airlineid = 'LH' connectionnumber =
 
 
 ENDMETHOD.
-
-
 ENDCLASS.
-*
-
-

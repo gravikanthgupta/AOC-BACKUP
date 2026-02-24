@@ -24,7 +24,7 @@ ENDCLASS.
 
 
 
-CLASS zivar_cl_ivar_r_amdp IMPLEMENTATION.
+CLASS ZIVAR_CL_IVAR_R_AMDP IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.
@@ -48,7 +48,6 @@ CLASS zivar_cl_ivar_r_amdp IMPLEMENTATION.
   ENDMETHOD.
 
 
-
   METHOD add_numbers BY DATABASE PROCEDURE FOR HDB LANGUAGE SQLSCRIPT OPTIONS READ-ONLY.
     deCLARE c inteGER;
     declaRE d inTEGER;
@@ -58,6 +57,7 @@ CLASS zivar_cl_ivar_r_amdp IMPLEMENTATION.
     res := :c + :d;
 
   ENDMETHOD.
+
 
   METHOD get_sales BY DATABASE PROCEDURE FOR HDB LANGUAGE SQLSCRIPT OPTIONS READ-ONLY USING zi_ivar_r_sales_data.
 
@@ -73,6 +73,7 @@ CLASS zivar_cl_ivar_r_amdp IMPLEMENTATION.
 
 
   ENDMETHOD.
+
 
   METHOD get_cus_rank BY DATABASE FUNCTION FOR HDB LANGUAGE SQLSCRIPT OPTIONS READ-ONLY
                       USING zivar_r_bpa zivar_r_so_hdr zivar_r_so_item.
@@ -94,5 +95,4 @@ CLASS zivar_cl_ivar_r_amdp IMPLEMENTATION.
 *      liMIT 3;
 
   endmethod.
-
 ENDCLASS.

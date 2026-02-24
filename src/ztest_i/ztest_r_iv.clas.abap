@@ -15,7 +15,7 @@ ENDCLASS.
 
 
 
-CLASS ztest_r_iv IMPLEMENTATION.
+CLASS ZTEST_R_IV IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.
@@ -31,9 +31,9 @@ CLASS ztest_r_iv IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD get_add.
     res = a + b.
 
   ENDMETHOD.
-
 ENDCLASS.

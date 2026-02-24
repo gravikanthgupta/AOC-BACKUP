@@ -15,7 +15,7 @@ ENDCLASS.
 
 
 
-CLASS zivar_cl_data_entry IMPLEMENTATION.
+CLASS ZIVAR_CL_DATA_ENTRY IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.
@@ -30,6 +30,7 @@ CLASS zivar_cl_data_entry IMPLEMENTATION.
 *        output =
     ).
   ENDMETHOD.
+
 
   METHOD fill_master_data.
     data : lt_bp type table of zivar_r_bpa,
@@ -175,6 +176,7 @@ CLASS zivar_cl_data_entry IMPLEMENTATION.
      insert zivar_r_product from table @lt_prod.
   ENDMETHOD.
 
+
   METHOD fill_transaction_data.
     data : o_rand type REF TO cl_abap_random_int,
            n type i,
@@ -233,10 +235,8 @@ CLASS zivar_cl_data_entry IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD flush.
     delete from : zivar_r_bpa, zivar_r_product, zivar_r_so_hdr, zivar_r_so_item.
   ENDMETHOD.
-
 ENDCLASS.
-
-

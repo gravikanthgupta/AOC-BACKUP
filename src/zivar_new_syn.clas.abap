@@ -51,7 +51,7 @@ ENDCLASS.
 
 
 
-CLASS zivar_new_syn IMPLEMENTATION.
+CLASS ZIVAR_NEW_SYN IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.
@@ -95,6 +95,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD s1_cond_conv_exp.
     DATA: lv_numc TYPE n LENGTH 4 VALUE '0060',
           lv_num  TYPE i,
@@ -113,6 +114,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
 
 
   ENDMETHOD.
+
 
   METHOD s1_constructor_expression.
 
@@ -148,6 +150,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
 *    lr_t1 = NEW tty_table( ( id = 1 name = 'Alpha' ) ( id = 2 name = 'Beta' ) ).
 
   ENDMETHOD.
+
 
   METHOD s1_corresponding_data.
     TYPES: BEGIN OF ty_game,
@@ -190,6 +193,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD s1_inline_declaration.
 *    lv_uuid = cl_uuid_factory=>create_system_uuid(  )->convert_uuid_c32(
 *       imPORTING
@@ -198,6 +202,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
 
 
   ENDMETHOD.
+
 
   METHOD s1_loop_reduce_statement.
     TYPES: tt_bookings TYPE TABLE OF /dmo/booking WITH DEFAULT KEY.
@@ -215,6 +220,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
     im_total = lv_total.
 
   ENDMETHOD.
+
 
   METHOD s1_loop_with_grouping.
     TYPES: tt_bookings TYPE TABLE OF /dmo/booking WITH DEFAULT KEY.
@@ -236,6 +242,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
     im_grp_book = CORRESPONDING tt_bookings( lt_grp_book ).
 
   ENDMETHOD.
+
 
   METHOD s1_loop_with_single_line.
     TYPES: tt_bookings TYPE TABLE OF /dmo/booking WITH DEFAULT KEY.
@@ -263,6 +270,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
     im_final_booking = CORRESPONDING tt_final_booking( lt_final_booking ).
   ENDMETHOD.
 
+
   METHOD s1_table_expression.
     DATA: itab TYPE TABLE OF /dmo/booking WITH DEFAULT KEY.
 
@@ -279,6 +287,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
     im_flight_price = VALUE #( itab[ travel_id = '00000001' carrier_id = 'AA' ]-flight_price OPTIONAL ).
     im_res = wa.
   ENDMETHOD.
+
 
   METHOD s1_value_expression.
 
@@ -298,6 +307,7 @@ CLASS zivar_new_syn IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD s1_using_key_expression.
     DATA: itab TYPE SORTED TABLE OF /dmo/booking
           WITH UNIQUE KEY travel_id booking_id
@@ -314,5 +324,4 @@ CLASS zivar_new_syn IMPLEMENTATION.
     ENDLOOP.
 
   ENDMETHOD.
-
 ENDCLASS.

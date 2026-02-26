@@ -1,0 +1,109 @@
+managed implementation in class zbp_ivar_r_travel unique;
+// Guidelines and best practice for definition to be followed
+// 2 - is latest guidelines. 1 - old guidelines
+strict ( 2 );
+
+// Define the behaviour for root entity Travel
+define behavior for zivar_r_travel alias Travel
+
+//It tells to RAP framework which table needs to update
+persistent table /dmo/travel_m
+
+// How the RAP should handle the locks -
+// If a travel request is locked then other users cannot edit the childs - Bookings & Supplements
+lock master
+
+// Authorization. Instance & Global
+// Instance : Based on the each record
+// Global: Based on table wise
+authorization master ( instance )
+
+// etag for concurrency control
+etag master LastChangedAt
+{
+  // Here are the operations which RAP will generate automatically (Manage)
+  create ( authorization : global );
+  update;
+  delete;
+  //  field ( readonly ) TravelId;
+
+  // A Booking can only be created with travel request
+  // With out travel request, we cannot create Booking
+  association _Booking { create; }
+
+  mapping for /dmo/travel_m
+    {
+      TravelId      = travel_id;
+      AgencyId      = agency_id;
+      CustomerId    = customer_id;
+      BeginDate     = begin_date;
+      EndDate       = end_date;
+      TotalPrice    = total_price;
+      Bookingfee    = booking_fee;
+      currencyCode  = currency_code;
+      Description   = description;
+      OverallStatus = overall_status;
+      CreatedBy     = created_by;
+      LastChangedBy = last_changed_by;
+      CreatedAt     = created_at;
+      LastChangedAt = last_changed_at;
+    }
+}
+
+// Define the behaviour for Child entity Booking
+define behavior for ZIVAR_R_bOOKING alias Booking
+
+//It tells to RAP framework which table needs to update
+persistent table /dmo/booking_m
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LastChangedAt
+{
+  update;
+  delete;
+//  field ( readonly ) TravelId, BookingId;
+  field ( readonly ) TravelId;
+  association _Travel;
+  association _BookingSupplement { create; }
+
+  mapping for /dmo/booking_m
+    {
+      TravelId      = travel_id;
+      BookingId     = Booking_Id;
+      BookingDate   = Booking_Date;
+      CustomerId    = Customer_Id;
+      CarrierId     = carrier_Id;
+      ConnectionId  = connection_id;
+      FlightDate    = flight_date;
+      FlightPrice   = flight_price;
+      currencyCode  = currency_code;
+      BookingStatus = booking_status;
+      LastChangedAt = last_changed_at;
+    }
+}
+
+// Define the behaviour for Child entity Booking Suppliments
+define behavior for zivar_r_booksuppl alias BookSuppl
+persistent table /dmo/booksuppl_m
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LastChangedAt
+{
+  update;
+  delete;
+//  field ( readonly ) TravelId, BookingId, BookingSupplementId;
+  field ( readonly ) TravelId, BookingId;
+  association _Travel;
+  association _Booking;
+
+  mapping for /dmo/booksuppl_m
+    {
+      TravelId            = travel_id;
+      BookingId           = Booking_Id;
+      BookingSupplementId = booking_supplement_id;
+      SupplementId        = supplement_id;
+      Price               = price;
+      CurrencyCode        = currency_code;
+      LastChangedAt       = last_changed_at;
+    }
+}

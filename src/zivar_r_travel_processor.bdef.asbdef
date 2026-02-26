@@ -1,0 +1,30 @@
+projection;
+strict ( 2 );
+
+define behavior for zivar_r_travel_processor alias Travel
+{
+// Here for all use came. That means these functionalieis bring from original one
+  use create;
+  use update;
+  use delete;
+
+  use association _Booking { create; }
+}
+
+define behavior for zivar_r_booking_processor alias Booking
+{
+  use update;
+  use delete;
+
+  use association _Travel;
+  use association _BookingSupplement { create; }
+}
+
+define behavior for ZIVAR_R_BOOkSUPPL_PROCESSOR alias BookSuppl
+{
+  use update;
+  use delete;
+
+  use association _Travel;
+  use association _Booking;
+}

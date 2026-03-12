@@ -4,7 +4,7 @@ CLASS zivar_cl_eml DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    DATA: lv_opr TYPE c VALUE 'D'.
+    DATA: lv_opr TYPE c VALUE 'R'.
 
     INTERFACES if_oo_adt_classrun .
   PROTECTED SECTION.

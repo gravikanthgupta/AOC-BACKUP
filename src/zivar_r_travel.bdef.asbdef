@@ -1,11 +1,13 @@
-managed implementation in class zbp_ivar_r_travel unique;
+managed;
+// implementation in class zbp_ivar_r_travel unique;
 // Guidelines and best practice for definition to be followed
 // 2 - is latest guidelines. 1 - old guidelines
 strict ( 2 );
 
 // Define the behaviour for root entity Travel
 define behavior for zivar_r_travel alias Travel
-
+// Make the behaviour pool/implementation for travel entity
+implementation in class zbp_ivar_r_travel unique
 //It tells to RAP framework which table needs to update
 persistent table /dmo/travel_m
 
@@ -20,12 +22,13 @@ authorization master ( instance )
 
 // etag for concurrency control
 etag master LastChangedAt
+early numbering
 {
   // Here are the operations which RAP will generate automatically (Manage)
   create ( authorization : global );
   update;
   delete;
-  //  field ( readonly ) TravelId;
+  field ( readonly ) TravelId;
 
   // A Booking can only be created with travel request
   // With out travel request, we cannot create Booking
@@ -52,17 +55,20 @@ etag master LastChangedAt
 
 // Define the behaviour for Child entity Booking
 define behavior for ZIVAR_R_bOOKING alias Booking
+// Make the behaviour pool/implementation for Booking entity
+implementation in class zbp_ivar_r_booking unique
 
 //It tells to RAP framework which table needs to update
 persistent table /dmo/booking_m
 lock dependent by _Travel
 authorization dependent by _Travel
 etag master LastChangedAt
+early numbering
 {
   update;
   delete;
-//  field ( readonly ) TravelId, BookingId;
-  field ( readonly ) TravelId;
+  field ( readonly ) TravelId, BookingId;
+//  field ( readonly ) TravelId;
   association _Travel;
   association _BookingSupplement { create; }
 
@@ -84,15 +90,18 @@ etag master LastChangedAt
 
 // Define the behaviour for Child entity Booking Suppliments
 define behavior for zivar_r_booksuppl alias BookSuppl
+// Make the behaviour pool/implementation for Booking Supplement entity
+implementation in class zbp_ivar_r_booksuppl unique
 persistent table /dmo/booksuppl_m
 lock dependent by _Travel
 authorization dependent by _Travel
 etag master LastChangedAt
+early numbering
 {
   update;
   delete;
-//  field ( readonly ) TravelId, BookingId, BookingSupplementId;
-  field ( readonly ) TravelId, BookingId;
+  field ( readonly ) TravelId, BookingId, BookingSupplementId;
+//  field ( readonly ) TravelId, BookingId;
   association _Travel;
   association _Booking;
 

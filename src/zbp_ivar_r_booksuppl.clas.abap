@@ -1,0 +1,5 @@
+CLASS zbp_ivar_r_booksuppl DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zivar_r_travel.
+ENDCLASS.
+
+CLASS zbp_ivar_r_booksuppl IMPLEMENTATION.
+ENDCLASS.

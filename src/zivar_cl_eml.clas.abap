@@ -4,7 +4,7 @@ CLASS zivar_cl_eml DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    DATA: lv_opr TYPE c VALUE 'R'.
+    DATA: lv_opr TYPE c VALUE 'C'.
 
     INTERFACES if_oo_adt_classrun .
   PROTECTED SECTION.
@@ -17,6 +17,12 @@ CLASS zivar_cl_eml IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.
+    " Declare variables for EML response
+    DATA lt_failed   TYPE response FOR  FAILED   zivar_r_travel.
+    DATA lt_messages TYPE RESPONSE FOR REPORTED zivar_r_travel.
+    DATA lt_mapped   TYPE RESPONSE FOR MAPPED   zivar_r_travel.
+
+
     CASE lv_opr.
       WHEN 'R'.
         READ ENTITIES OF zivar_r_travel
@@ -28,8 +34,8 @@ CLASS zivar_cl_eml IMPLEMENTATION.
                       ( TravelID = '99999992' )
                      )
         RESULT DATA(lt_result)
-        FAILED DATA(lt_failed)
-        REPORTED DATA(lt_messages).
+        FAILED lt_failed
+        REPORTED lt_messages.
 
         out->write(
           EXPORTING
@@ -50,7 +56,7 @@ CLASS zivar_cl_eml IMPLEMENTATION.
         WITH VALUE #(
             (
               %cid = '1'
-              TravelId = '00007001'
+              TravelId = '90000000'                         "'00007001'
               AgencyId = lv_agency
               CustomerId = lv_customer
               CurrencyCode = 'INR'
@@ -65,14 +71,14 @@ CLASS zivar_cl_eml IMPLEMENTATION.
               TravelId = '00004092'
               AgencyId = lv_agency
               CustomerId = lv_customer
-              CurrencyCode = 'INR'
+              CurrencyCode = 'IR' "'INR'
               BeginDate = cl_abap_context_info=>get_system_date( )
               EndDate = cl_abap_context_info=>get_system_date( ) + 20
               Description = lv_description
               OverallStatus = 'A'
             )
          )
-         MAPPED DATA(lt_mapped)
+         MAPPED lt_mapped
          FAILED lt_failed
          REPORTED lt_messages.
 
@@ -86,6 +92,13 @@ CLASS zivar_cl_eml IMPLEMENTATION.
           EXPORTING
             data   = lt_failed
          ).
+
+         out->write(
+          EXPORTING
+            data   = lt_messages
+         ).
+
+
 
 
       WHEN 'U'.
@@ -120,7 +133,7 @@ CLASS zivar_cl_eml IMPLEMENTATION.
             DELETE FROM
              VALUE #(
                 (
-                  TravelId = '00007001'
+                  TravelId = '90000000'
                 )
              )
              MAPPED lt_mapped

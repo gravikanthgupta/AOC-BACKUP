@@ -6,7 +6,7 @@
 
 //    Object page title details
     title: { value: 'TravelId' },
-    description: { value: '_customer.FirstName' }
+    description: { value: '_customer.LastName' }
 //    imageUrl: {  }
 }
 annotate entity zivar_r_travel_processor with
@@ -89,9 +89,16 @@ annotate entity zivar_r_travel_processor with
              ]
 
   @UI.selectionField: [{ position: 10 }]
-  @UI.lineItem: [{ position: 10 }]
-  
-  @UI.identification: [ { position: 10 } ]
+  @UI.lineItem: [{ position: 10 },
+                 { type: #FOR_ACTION, label: 'Copy Travel', 
+//                   inline: true,
+                   dataAction: 'copyTravel' }
+                ]
+
+// If you want to add button in object page instead of list page then add  
+  @UI.identification: [ { position: 10 },
+                 { type: #FOR_ACTION, label: 'Copy Travel', 
+                   dataAction: 'copyTravel' } ]
   TravelId;
 
   @UI.selectionField: [{ position: 20 }]

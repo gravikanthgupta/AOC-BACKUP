@@ -34,6 +34,10 @@ early numbering
   // With out travel request, we cannot create Booking
   association _Booking { create; }
 
+  // Instance bound factory data action for copy button
+  // Cardinality how many records can be copied at a type. Only one for our scenario
+  factory action copyTravel [1];
+
   mapping for /dmo/travel_m
     {
       TravelId      = travel_id;
@@ -68,7 +72,7 @@ early numbering
   update;
   delete;
   field ( readonly ) TravelId, BookingId;
-//  field ( readonly ) TravelId;
+  //  field ( readonly ) TravelId;
   association _Travel;
   association _BookingSupplement { create; }
 
@@ -101,7 +105,7 @@ early numbering
   update;
   delete;
   field ( readonly ) TravelId, BookingId, BookingSupplementId;
-//  field ( readonly ) TravelId, BookingId;
+  //  field ( readonly ) TravelId, BookingId;
   association _Travel;
   association _Booking;
 

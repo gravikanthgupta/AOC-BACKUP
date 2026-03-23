@@ -8,6 +8,8 @@ define behavior for zivar_r_travel_processor alias Travel
   use update;
   use delete;
 
+// Expose the copyTravel to projection also.
+  use action copyTravel;
   use association _Booking { create; }
 }
 

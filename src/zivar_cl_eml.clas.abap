@@ -4,7 +4,7 @@ CLASS zivar_cl_eml DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    DATA: lv_opr TYPE c VALUE 'C'.
+    DATA: lv_opr TYPE c VALUE 'Z'.
 
     INTERFACES if_oo_adt_classrun .
   PROTECTED SECTION.
@@ -18,7 +18,7 @@ CLASS zivar_cl_eml IMPLEMENTATION.
 
   METHOD if_oo_adt_classrun~main.
     " Declare variables for EML response
-    DATA lt_failed   TYPE response FOR  FAILED   zivar_r_travel.
+    DATA lt_failed   TYPE RESPONSE FOR  FAILED   zivar_r_travel.
     DATA lt_messages TYPE RESPONSE FOR REPORTED zivar_r_travel.
     DATA lt_mapped   TYPE RESPONSE FOR MAPPED   zivar_r_travel.
 
@@ -52,11 +52,12 @@ CLASS zivar_cl_eml IMPLEMENTATION.
 
         MODIFY ENTITIES OF zivar_r_travel
         ENTITY Travel
-        CREATE FIELDS ( TravelId AgencyId CustomerId CurrencyCode BeginDate Enddate Description OverallStatus )
+*        CREATE FIELDS ( TravelId AgencyId CustomerId CurrencyCode BeginDate Enddate Description OverallStatus )
+        CREATE FIELDS ( AgencyId CustomerId CurrencyCode BeginDate Enddate Description OverallStatus )
         WITH VALUE #(
             (
               %cid = '1'
-              TravelId = '90000000'                         "'00007001'
+*              TravelId = '90000000'                         "'00007001'
               AgencyId = lv_agency
               CustomerId = lv_customer
               CurrencyCode = 'INR'
@@ -68,7 +69,7 @@ CLASS zivar_cl_eml IMPLEMENTATION.
 
             (
               %cid = '2'
-              TravelId = '00004092'
+*              TravelId = '00004092'
               AgencyId = lv_agency
               CustomerId = lv_customer
               CurrencyCode = 'IR' "'INR'
@@ -93,10 +94,10 @@ CLASS zivar_cl_eml IMPLEMENTATION.
             data   = lt_failed
          ).
 
-         out->write(
-          EXPORTING
-            data   = lt_messages
-         ).
+        out->write(
+         EXPORTING
+           data   = lt_messages
+        ).
 
 
 
@@ -150,6 +151,123 @@ CLASS zivar_cl_eml IMPLEMENTATION.
           EXPORTING
             data   = lt_failed
          ).
+
+      WHEN 'Z'.
+        lv_description = 'Test EML with Class'.
+        lv_agency = '070014'.
+        lv_customer = '000337'.
+
+        MODIFY ENTITIES OF zivar_r_travel
+        ENTITY Travel
+        CREATE FIELDS ( AgencyId CustomerId CurrencyCode BeginDate Enddate Description OverallStatus )
+        WITH VALUE #(
+            (
+              %cid = '1'
+              AgencyId = lv_agency
+              CustomerId = lv_customer
+              CurrencyCode = 'INR'
+              BeginDate = cl_abap_context_info=>get_system_date( )
+              EndDate = cl_abap_context_info=>get_system_date( ) + 20
+              Description = lv_description
+              OverallStatus = 'A'
+            )
+
+            (
+              %cid = '2'
+              AgencyId = lv_agency
+              CustomerId = lv_customer
+              CurrencyCode = 'INR'
+              BeginDate = cl_abap_context_info=>get_system_date( )
+              EndDate = cl_abap_context_info=>get_system_date( ) + 20
+              Description = 'Test EML with Class 2'
+              OverallStatus = 'A'
+            )
+         )
+
+         CREATE BY \_Booking
+         FIELDS ( CustomerID CarrierId ConnectionID FlightDate ) WITH
+         VALUE #( ( %cid_ref = '1'
+
+                     %target = VALUE #( ( %cid         = 'REF_1_1'
+                                          CustomerID   = lv_customer
+                                          CarrierId    = 'AA'
+                                          ConnectionID = '0322'
+                                          FlightPrice  = '1'
+                                          CurrencyCode = 'USD'
+                                          FlightDate   = cl_abap_context_info=>get_system_date( )
+                                         )
+
+                                        ( %cid         = 'REF_1_2'
+                                          CustomerID   = lv_customer
+                                          CarrierId    = 'AA'
+                                          ConnectionID = '0322'
+                                          FlightPrice  = '2'
+                                          CurrencyCode = 'USD'
+                                        FlightDate   = cl_abap_context_info=>get_system_date( )
+                                        )
+
+                                       )
+                        )
+                      ( %cid_ref = '2'
+
+                     %target = VALUE #( ( %cid         = 'REF_2_1'
+                                          CustomerID   = lv_customer
+                                          CarrierId    = 'AA'
+                                          ConnectionID = '0322'
+                                          FlightPrice  = '3'
+                                          CurrencyCode = 'USD'
+                                          FlightDate   = cl_abap_context_info=>get_system_date( ) )
+
+                                        ( %cid         = 'REF_2_2'
+                                          CustomerID   = lv_customer
+                                          CarrierId    = 'AA'
+                                          ConnectionID = '0322'
+                                          FlightPrice  = '4'
+                                          CurrencyCode = 'USD'
+                                        FlightDate   = cl_abap_context_info=>get_system_date( ) )
+
+                                         ) )
+
+                    (
+                      TravelID = '00004162'
+
+                     %target = VALUE #( ( %cid         = 'REF_3_1'
+                                          CustomerID   = lv_customer
+                                          CarrierId    = 'AA'
+                                          ConnectionID = '0322'
+                                          FlightPrice  = '5'
+                                          CurrencyCode = 'USD'
+                                          FlightDate   = cl_abap_context_info=>get_system_date( ) )
+
+                                        ( %cid         = 'REF_3_2'
+                                          CustomerID   = lv_customer
+                                          CarrierId    = 'AA'
+                                          ConnectionID = '0322'
+                                          FlightPrice  = '6'
+                                          CurrencyCode = 'USD'
+                                        FlightDate   = cl_abap_context_info=>get_system_date( ) )
+
+                                         ) ) )
+
+         MAPPED lt_mapped
+         FAILED lt_failed
+         REPORTED lt_messages.
+
+        COMMIT ENTITIES.
+
+        out->write(
+         EXPORTING
+           data   = lt_mapped
+       ).
+        out->write(
+          EXPORTING
+            data   = lt_failed
+         ).
+
+        out->write(
+         EXPORTING
+           data   = lt_messages
+        ).
 
     ENDCASE.
   ENDMETHOD.

@@ -28,11 +28,19 @@ early numbering
   create ( authorization : global );
   update;
   delete;
-  field ( readonly ) TravelId;
+
+
 
   // A Booking can only be created with travel request
   // With out travel request, we cannot create Booking
-  association _Booking { create; }
+  // Dynamic feature control at the time of creation of Booking. Creation of booking isntances
+  // controlled by dynamic feature based on rejection or not
+
+  association _Booking { create (features:instance); }
+
+  // Static feature control
+  field ( readonly ) TravelId, CreatedBy, CreatedAt, LastChangedAt, LastChangedBy;
+  field (mandatory) AgencyId, CustomerId, BeginDate, EndDate, OverallStatus, BookingFee, CurrencyCode;
 
   // Instance bound factory data action for copy button
   // Cardinality how many records can be copied at a type. Only one for our scenario
@@ -71,7 +79,11 @@ early numbering
 {
   update;
   delete;
+
+  // Static feature control
   field ( readonly ) TravelId, BookingId;
+  field ( mandatory ) CarrierId, ConnectionId, FlightDate, BookingStatus;
+
   //  field ( readonly ) TravelId;
   association _Travel;
   association _BookingSupplement { create; }
@@ -105,6 +117,9 @@ early numbering
   update;
   delete;
   field ( readonly ) TravelId, BookingId, BookingSupplementId;
+
+  field ( mandatory ) Price, SupplementId;
+
   //  field ( readonly ) TravelId, BookingId;
   association _Travel;
   association _Booking;

@@ -9,6 +9,8 @@ CLASS lhc_Travel DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS copyTravel FOR MODIFY
       IMPORTING keys FOR ACTION Travel~copyTravel.
+    METHODS get_instance_features FOR INSTANCE FEATURES
+      IMPORTING keys REQUEST requested_features FOR Travel RESULT result.
 
     METHODS earlynumbering_create FOR NUMBERING
       IMPORTING entities FOR CREATE Travel.
@@ -197,15 +199,117 @@ CLASS lhc_Travel IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD copyTravel.
-  data: travels type table for create zivar_r_travel\\Travel,
-        booking_cba type table for create zivar_r_travel\\Travel\_Booking,
-        bookingsuppl_cba type table for create zivar_r_travel\\Booking\_BookingSupplement.
+    DATA: travels          TYPE TABLE FOR CREATE zivar_r_travel\\Travel,
+          booking_cba      TYPE TABLE FOR CREATE zivar_r_travel\\Travel\_Booking,
+          bookingsuppl_cba TYPE TABLE FOR CREATE zivar_r_travel\\Booking\_BookingSupplement.
     " Step 1: Remove the travel instances with initial %cid
+    READ TABLE keys WITH KEY %cid = '' INTO DATA(key_with_initial_cid).
+    ASSERT key_with_initial_cid IS INITIAL.
+
     " Step 2: Read all travel, booking and booking supplement using EML
+    READ ENTITIES OF zivar_r_travel IN LOCAL MODE
+        ENTITY Travel
+        ALL FIELDS WITH CORRESPONDING #( keys )
+        RESULT DATA(travel_read_result)
+        FAILED failed.
+
+    READ ENTITIES OF zivar_r_travel IN LOCAL MODE
+        ENTITY Travel BY \_Booking
+        ALL FIELDS WITH CORRESPONDING #( travel_read_result )
+        RESULT DATA(book_read_result)
+        FAILED failed.
+
+    READ ENTITIES OF zivar_r_travel IN LOCAL MODE
+        ENTITY Booking BY \_BookingSupplement
+        ALL FIELDS WITH CORRESPONDING #( book_read_result )
+        RESULT DATA(booksuppl_read_result)
+        FAILED failed.
+
     " Step 3: Fill travel internal table for travel data creation - %cid
-    " Step 4: Fill booking internal table for booking data creation - %cid_ref
-    " Step 5: Fill booking Supplement internal table for booking Suppl data creation - %cid_ref
+    LOOP AT travel_read_result ASSIGNING FIELD-SYMBOL(<travel>).
+
+      " Travel Data preperation
+      APPEND VALUE #( %cid = keys[ KEY entity %tky = <travel>-%tky ]-%cid
+                      %data = CORRESPONDING #( <travel> EXCEPT travelId )
+                     ) TO travels ASSIGNING FIELD-SYMBOL(<new_travel>).
+
+      <new_travel>-BeginDate = cl_abap_context_info=>get_system_date(  ).
+      <new_travel>-EndDate = cl_abap_context_info=>get_system_date(  ) + 30.
+      <new_travel>-OverallStatus = 'O'.
+
+      " Step 4: Fill booking internal table for booking data creation - %cid_ref
+      APPEND VALUE #( %cid_ref = keys[ KEY entity %tky = <travel>-%tky ]-%cid )
+                     TO booking_cba ASSIGNING FIELD-SYMBOL(<bookings_cba>).
+
+      LOOP AT book_read_result ASSIGNING FIELD-SYMBOL(<booking>)  WHERE travelId = <travel>-TravelId.
+        APPEND VALUE #( %cid = keys[ KEY entity %tky = <travel>-%tky ]-%cid && <booking>-BookingId
+                        %data = CORRESPONDING #( book_read_result[ KEY entity %tky = <booking>-%tky ] EXCEPT TravelId  ) )
+          TO <bookings_cba>-%target ASSIGNING FIELD-SYMBOL(<new_booking>).
+
+        <new_booking>-BookingStatus = 'N'.
+        " Step 5: Fill booking Supplement internal table for booking Suppl data creation - %cid_ref
+
+        APPEND VALUE #( %cid_ref = keys[ KEY entity %tky = <travel>-%tky ]-%cid && <booking>-BookingId )
+                    TO bookingsuppl_cba ASSIGNING FIELD-SYMBOL(<booksuppl_cba>).
+
+        LOOP AT booksuppl_read_result ASSIGNING FIELD-SYMBOL(<booksuppl>)
+           USING KEY entity WHERE TravelId = <travel>-TravelId AND
+                                  BookingId = <booking>-BookingId.
+          APPEND VALUE #( %cid = keys[ KEY entity %tky = <travel>-%tky ]-%cid && <booking>-BookingId && <booksuppl>-BookingSupplementId
+                      %data = CORRESPONDING #( <booksuppl> EXCEPT TravelId  BookingId ) )
+        TO <booksuppl_cba>-%target.
+
+        ENDLOOP.
+
+      ENDLOOP.
+
+
+
+    ENDLOOP.
+
     " Step 6" EML for modify entity to create new BO instance using exisiting data
+    MODIFY ENTITIES OF zivar_r_travel IN LOCAL MODE
+        ENTITY travel
+            CREATE FIELDS ( AgencyId  CustomerId BeginDate EndDate BookingFee TotalPrice CurrencyCode OverallStatus )
+                WITH travels
+                CREATE BY \_Booking FIELDS ( BookingId BookingDate CustomerId CarrierId ConnectionId FlightDate FlightPrice CurrencyCode )
+                    WITH booking_cba
+                        ENTITY Booking
+                            CREATE BY \_BookingSupplement FIELDS ( BookingSupplementId SupplementId Price CurrencyCode )
+                                WITH bookingsuppl_cba
+          MAPPED DATA(mapped_create).
+
+    mapped-travel = mapped_create-travel.
+
+  ENDMETHOD.
+
+  METHOD get_instance_features.
+    " Step 1: Read travel data with status
+    READ ENTITIES OF zivar_r_travel IN LOCAL MODE
+        ENTITY travel
+            FIELDS ( TravelId OverallStatus )
+                WITH CORRESPONDING #( keys )
+         RESULT DATA(travels)
+         FAILED failed.
+
+    " Step 2: Return the result with booking creation possible or not
+*    READ TABLE travels INTO DATA(ls_travel) INDEX 1.
+*    IF ( ls_travel-OverallStatus = 'X' ).
+*      DATA(lv_allow) = if_abap_behv=>fc-o-disabled.
+*    ELSE.
+*      lv_allow = if_abap_behv=>fc-o-enabled.
+*    ENDIF.
+*
+*    result = VALUE #( FOR travel IN travels
+*                      ( %tky = travel-%tky
+*                        %assoc-_Booking = lv_allow ) ).
+
+    result = VALUE #( FOR travel IN travels
+                       ( %tky                 = travel-%tky
+                         %assoc-_booking      = COND #( WHEN travel-OverallStatus = 'X'
+                                                            THEN if_abap_behv=>fc-o-disabled
+                                                            ELSE if_abap_behv=>fc-o-enabled   )
+                      ) ).
 
   ENDMETHOD.
 
